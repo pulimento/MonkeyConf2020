@@ -4,6 +4,7 @@ trigger:
 ###################
 ### Android BUILD
 ###################
+jobs:
 
 - job: Android_Job
   displayName: Xamarin Forms Android CI Build
@@ -19,7 +20,7 @@ trigger:
       restoreSolution: '**/*.sln'
       feedsToUse: 'select'
     
-    - task: XamarinAndroid@1
-      inputs:
-        projectFile: '**/*.csproj'
-        jdkOption: 'JDKVersion'
+  - task: XamarinAndroid@1
+    inputs:
+      projectFile: '**/*.csproj'
+      jdkOption: 'JDKVersion'
