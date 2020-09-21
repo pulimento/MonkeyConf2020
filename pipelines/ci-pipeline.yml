@@ -1,0 +1,25 @@
+trigger:
+- master
+
+###################
+### Android BUILD
+###################
+
+- job: Android_Job
+  displayName: Xamarin Forms Android CI Build
+
+  pool:
+    vmImage: 'windows-2019'
+
+  steps:
+  - task: NuGetCommand@2
+    displayName: "Restore NuGet packages"
+    inputs:
+      command: 'restore'
+      restoreSolution: '**/*.sln'
+      feedsToUse: 'select'
+    
+    - task: XamarinAndroid@1
+      inputs:
+        projectFile: '**/*.csproj'
+        jdkOption: 'JDKVersion'
