@@ -23,4 +23,6 @@ jobs:
   - task: XamarinAndroid@1
     inputs:
       projectFile: '**/MyIncredibleApp.Android.csproj'
+      createAppPackage: false
+      msbuildVersionOption: 'latest'
       jdkOption: 'JDKVersion'
