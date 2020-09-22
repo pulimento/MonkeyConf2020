@@ -32,6 +32,6 @@ jobs:
     displayName: "Run tests"
     inputs:
       testSelector: 'testAssemblies'
-      testAssemblyVer2: '**\*Tests.dll'
+      testAssemblyVer2: '*Tests.dll'
       searchFolder: '$(System.DefaultWorkingDirectory)'
       runInParallel: true
