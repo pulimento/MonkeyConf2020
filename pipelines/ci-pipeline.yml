@@ -26,6 +26,11 @@ jobs:
       createAppPackage: false
       msbuildVersionOption: 'latest'
       jdkOption: 'JDKVersion'
+  - task: DotNetCoreCLI@2
+    displayName: Build Tests
+    inputs:
+      command: 'build'
+      projects: '**/MyIncredibleTests.csproj'
   - task: VSTest@2
     displayName: "Run tests"
     inputs:
