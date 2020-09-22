@@ -28,3 +28,10 @@ jobs:
       createAppPackage: false
       msbuildVersionOption: 'latest'
       jdkOption: 'JDKVersion'
+  - task: VSTest@2
+    displayName: "Run tests"
+    inputs:
+      testSelector: 'testAssemblies'
+      testAssemblyVer2: '**\*Tests.dll'
+      searchFolder: '$(System.DefaultWorkingDirectory)'
+      runInParallel: true
