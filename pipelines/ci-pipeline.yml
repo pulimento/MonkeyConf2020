@@ -29,6 +29,7 @@ jobs:
       msbuildVersionOption: 'latest'
       jdkOption: 'JDKVersion'
   - task: VSTest@2
+    displayName: "Run tests"
     inputs:
       testSelector: 'testAssemblies'
       testAssemblyVer2: '**\*Tests.dll'
