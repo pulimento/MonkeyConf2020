@@ -31,8 +31,3 @@ jobs:
     inputs:
       command: 'test'
       projects: '**/MyIncredibleTests.csproj'
-  - task: PublishTestResults@2
-    displayName: 'Publish test results'
-    inputs:
-      testResultsFormat: 'VSTest'
-      testResultsFiles: '*.trx'
