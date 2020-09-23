@@ -32,7 +32,7 @@ jobs:
       command: 'test'
       projects: '**/MyIncredibleTests.csproj'
   - task: PublishTestResults@2
-    displayName: '[${{module}}] Publish test results'
+    displayName: 'Publish test results'
     inputs:
       testResultsFormat: 'VSTest'
       testResultsFiles: '**/*.trx'
