@@ -35,4 +35,4 @@ jobs:
     displayName: 'Publish test results'
     inputs:
       testResultsFormat: 'VSTest'
-      testResultsFiles: '*.trx'
+      testResultsFiles: '/*.trx'
