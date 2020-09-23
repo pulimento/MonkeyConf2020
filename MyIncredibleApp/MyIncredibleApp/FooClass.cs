@@ -8,7 +8,7 @@ namespace MyIncredibleApp
     {
         public bool Feature()
         {
-            return false;
+            return true;
         }
     }
 }
