@@ -31,8 +31,6 @@ jobs:
     inputs:
       command: 'test'
       projects: '**/MyIncredibleTests.csproj'
-      arguments: '--logger trx'
-      publishTestResults: false
   - task: PublishTestResults@2
     displayName: 'Publish test results'
     inputs:
