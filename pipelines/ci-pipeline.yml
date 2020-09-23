@@ -27,14 +27,12 @@ jobs:
       msbuildVersionOption: 'latest'
       jdkOption: 'JDKVersion'
   - task: DotNetCoreCLI@2
-    displayName: Build Tests
+    displayName: Run Tests
     inputs:
-      command: 'build'
+      command: 'test'
       projects: '**/MyIncredibleTests.csproj'
-  - task: VSTest@2
-    displayName: "Run tests"
+  - task: PublishTestResults@2
+    displayName: 'Publish test results'
     inputs:
-      testSelector: 'testAssemblies'
-      testAssemblyVer2: '**\*Tests.dll'
-      searchFolder: '$(System.DefaultWorkingDirectory)'
-      runInParallel: true
+      testResultsFormat: 'VSTest'
+      testResultsFiles: '**/*.trx'
