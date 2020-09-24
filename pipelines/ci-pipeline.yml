@@ -3,6 +3,8 @@ pr:
 
 variables:
   - group: android-keystore-variables
+  - name: BuildConfiguration
+    value: 'Release'
 
 ###################
 ### Android BUILD
@@ -32,6 +34,8 @@ jobs:
   - task: XamarinAndroid@1
     inputs:
       projectFile: '**/MyIncredibleApp.Android.csproj'
+      outputDirectory: '$(Build.ArtifactStagingDirectory)'
+      configuration: '$(BuildConfiguration)'
       msbuildVersionOption: 'latest'
       jdkOption: 'JDKVersion'
   
@@ -43,11 +47,11 @@ jobs:
       apksignerKeystoreAlias: '$(keystore-key)'
       apksignerKeyPassword: '$(keystore-key-password)'
   
-  - task: CopyFiles@2
-    inputs:
-      sourceFolder: '$(outputDirectory)'
-      contents: '**/*.apk'
-      targetFolder: '$(build.artifactStagingDirectory)'
+ # - task: CopyFiles@2
+ #   inputs:
+ #     sourceFolder: '$(outputDirectory)'
+ #     contents: '**/*.apk'
+ #     targetFolder: '$(Build.ArtifactStagingDirectory)'
 
   - task: PublishBuildArtifacts@1
     inputs:
