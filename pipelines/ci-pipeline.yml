@@ -5,6 +5,8 @@ variables:
   - group: android-keystore-variables
   - name: BuildConfiguration
     value: 'Release'
+  - name: outputDirectory
+    value: '$(build.binariesDirectory)'
 
 ###################
 ### Android BUILD
@@ -34,19 +36,18 @@ jobs:
   - task: XamarinAndroid@1
     inputs:
       projectFile: '**/MyIncredibleApp.Android.csproj'
-      outputDirectory: '$(Build.BinariesDirectory)'
+      outputDirectory: '$(outputDirectory)'
       configuration: '$(BuildConfiguration)'
       msbuildVersionOption: 'latest'
       jdkOption: 'JDKVersion'
   
   - task: AndroidSigning@3
     inputs:
-      apkFiles: '**/*.apk'
+      apkFiles: '$(outputDirectory)/**/*.apk'
       apksignerKeystoreFile: 'myincredibleappkeystore.jks'
       apksignerKeystorePassword: '$(keystore-password)'
       apksignerKeystoreAlias: '$(keystore-key)'
       apksignerKeyPassword: '$(keystore-key-password)'
-      apksignerArguments: '--verbose --print-certs'
   
   - task: CopyFiles@2
     inputs:
