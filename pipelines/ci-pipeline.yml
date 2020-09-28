@@ -46,6 +46,7 @@ jobs:
       apksignerKeystorePassword: '$(keystore-password)'
       apksignerKeystoreAlias: '$(keystore-key)'
       apksignerKeyPassword: '$(keystore-key-password)'
+      apksignerArguments: '--verbose --print-certs'
   
   - task: CopyFiles@2
     inputs:
