@@ -2,6 +2,7 @@ pr:
 - master
 
 variables:
+  - group: android-keystore-variables
   - name: BuildConfiguration
     value: 'Release'
   - name: outputDirectory
@@ -15,6 +16,13 @@ jobs:
     vmImage: 'windows-2019'
   
   steps:
+
+  - task: DotNetCoreCLI@2
+    displayName: Run Tests
+    inputs:
+      command: 'test'
+      projects: '**/MyIncredibleTests.csproj'
+
   - task: NuGetCommand@2
     displayName: "Restore NuGet packages"
     inputs:
@@ -29,3 +37,23 @@ jobs:
       configuration: '$(BuildConfiguration)'
       msbuildVersionOption: 'latest'
       jdkOption: 'JDKVersion'
+
+  - task: AndroidSigning@3
+    inputs:
+      apkFiles: '$(outputDirectory)/**/*.apk'
+      apksignerKeystoreFile: 'myincredibleappkeystore.jks'
+      apksignerKeystorePassword: '$(keystore-password)'
+      apksignerKeystoreAlias: '$(keystore-key)'
+      apksignerKeyPassword: '$(keystore-key-password)'
+
+  - task: CopyFiles@2
+    inputs:
+      sourceFolder: '$(outputDirectory)'
+      contents: '**/*.apk'
+      targetFolder: '$(Build.ArtifactStagingDirectory)'
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      ArtifactName: 'AndroidPackage'
+      publishLocation: 'Container'     
