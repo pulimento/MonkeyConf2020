@@ -1,0 +1,93 @@
+trigger:
+- master
+
+variables:
+  - group: appversioning
+  - group: xcodeproject
+  - group: ios-secrets
+  - name: BuildConfiguration
+    value: 'Release'
+
+pool:
+  vmImage: 'macOS-10.15'
+
+workspace:
+  clean: all
+
+steps:
+
+- task: InstallAppleCertificate@2
+  inputs:
+    keychain: 'temp'
+    certSecureFile: ${{ parameters.certSecureFile }}
+    certPwd: ${{ parameters.certPwd }}
+
+- task: InstallAppleProvisioningProfile@1
+  inputs:
+    provisioningProfileLocation: 'secureFiles'
+    provProfileSecureFile: ${{ parameters.provProfileSecureFile }}
+
+- task: CocoaPods@0
+  displayName: 'CocoaPods install'
+  inputs:
+    forceRepoUpdate: $(COCOAPODS_FORCE_REPO_UPDATE)
+    projectDirectory: '$(srcfolder)'
+  
+- task: Xcode@5
+  displayName: 'XCode build'
+  inputs:
+    actions: 'build'
+    configuration: '$(BuildConfiguration)'
+    sdk: '$(xcode-sdk)'
+    xcWorkspacePath: '$(xcode-workspace-path)'
+    scheme: '$(xcode-scheme)'
+    xcodeVersion: 'specifyPath'
+    xcodeDeveloperDir: '/Applications/Xcode_12.app'
+    packageApp: true
+    exportPath: 'ipa'
+    exportOptions: 'plist'
+    exportOptionsPlist: 'signing/ExportOptions.plist'
+    exportArgs: 'ENABLE_BITCODE=YES'
+    signingOption: 'default'
+    useXcpretty: false
+
+- task: CopyFiles@2
+  displayName: 'Move IPA to artifacts directory'
+  inputs:
+    sourceFolder: '$(Build.Repository.LocalPath)'
+    contents: '**/*.ipa'
+    targetFolder: '$(build.artifactStagingDirectory)'
+  
+- task: CopyFiles@2
+  displayName: 'Move release testing info file to artifacts directory'
+  inputs:
+    sourceFolder: '$(Build.Repository.LocalPath)'
+    contents: '**/WhatToTest.txt'
+    targetFolder: '$(build.artifactStagingDirectory)'
+
+- task: CopyFiles@2
+  displayName: 'Move pipelines folder to artifact'
+  inputs:
+    sourceFolder: '$(Build.Repository.LocalPath)'
+    contents: 'pipelines/*'
+    targetFolder: '$(build.artifactStagingDirectory)'
+    
+- task: CopyFiles@2
+  displayName: 'Move Firebase Crashlytics pod folder to artifacts directory'
+  inputs:
+    sourceFolder: '$(Build.Repository.LocalPath)'
+    contents: 'src/Pods/FirebaseCrashlytics/*'
+    targetFolder: '$(build.artifactStagingDirectory)'
+
+- task: CopyFiles@2
+  displayName: 'Move GoogleService-Info.plist artifacts directory'
+  inputs:
+    sourceFolder: '$(Build.Repository.LocalPath)'
+    contents: 'src/GoogleService-Info.plist'
+    targetFolder: '$(build.artifactStagingDirectory)'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish build artifact'
+  inputs:
+    ArtifactName: 'iOS_Dist_Package'
+    publishLocation: 'Container'
